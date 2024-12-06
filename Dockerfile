@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copier les fichiers de l'application dans le conteneur
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Installer les dépendances npm
 RUN npm install
