@@ -2,7 +2,6 @@ node_modules
 npm-debug.log
 uploads
 output
-.DS_Store
 .env
-*.log
 .git
+*.log
