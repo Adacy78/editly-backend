@@ -1,18 +1,16 @@
-const express = require('express');
-const multer = require('multer');
-const editly = require('editly');
-const fs = require('fs');
-const path = require('path');
+import express from 'express';
+import multer from 'multer';
+import editly from 'editly';
+import fs from 'fs';
+import path from 'path';
 
 const app = express();
-const upload = multer({ dest: 'uploads/' }); // Répertoire temporaire pour les fichiers
+const upload = multer({ dest: 'uploads/' });
 
-// Route principale pour tester le serveur
 app.get('/', (req, res) => {
   res.send('Bienvenue sur le backend Editly !');
 });
 
-// Route pour créer une vidéo
 app.post('/create-video', upload.fields([{ name: 'images' }, { name: 'music' }]), async (req, res) => {
   try {
     const images = req.files['images'].map(file => ({ type: 'image', path: file.path }));
@@ -27,11 +25,10 @@ app.post('/create-video', upload.fields([{ name: 'images' }, { name: 'music' }])
       fps: 30,
       clips: images,
       audioFilePath: music,
-      loopAudio: true, // Répéter la musique si elle est plus courte que la vidéo
+      loopAudio: true,
     });
 
     res.download(outputPath, () => {
-      // Nettoyer les fichiers temporaires
       req.files['images'].forEach(file => fs.unlinkSync(file.path));
       fs.unlinkSync(music);
       fs.unlinkSync(outputPath);
@@ -42,7 +39,6 @@ app.post('/create-video', upload.fields([{ name: 'images' }, { name: 'music' }])
   }
 });
 
-// Lancer le serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
